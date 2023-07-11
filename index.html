@@ -14,12 +14,11 @@
     <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-pro.png">
     <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
     <link rel="apple-touch-icon" sizes="80x80" href="touch-icon-spotlight.png">
-      <title>Aerobic Exercise Prescription</title>
   </head>
   <body>
     <form method="post" class="TopForm">
       <input type="number" id="Age" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Age <br>
-      <input type="number" id="RestingHR" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Resting Heart Rate (optional)<br>
+      <input type="number" id="restingHR" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Resting Heart Rate (optional)<br>
     </form>
     <br>
     <br>
@@ -29,49 +28,55 @@
     <br>
     <br>
     <form class="Form">
-      <p class="big">Heart Rate Calculations:</p>
-      <div class="calcHide" id="estHRmax">Est. Heart Rate Max: <input type="text" id="HRmaxid"> bpm</div>
-      <div class="calcHide" id="heartratereserve">Heart Rate Reserve: <input type="text" id="HR-reserveid"> bpm</div>
-      <div class="calcHide" id="greenBand">Green band: <input type="text" id="greenNewRestingLength"> bpm</div>
-      <div class="calcHide" id="blueBand">Blue band: <input type="text" id="blueNewRestingLength"> bpm</div>
+      <p class="big">Heart Rate Calculations</p>
+      <div class="bandHide" id="HRMax">HR max: <input type="text" id="calcHRMax"> bpm</div>
+      <div class="bandHide" id="HRReserve">Heart Rate Reserve: <input type="text" id="calcHRReserve"> bpm</div>
+      <div class="bandHide" id="HRMaxsixtypercent">60% Max: <input type="text" id="sixtyPercentHRMax"> bpm</div>
+      <div class="bandHide" id="blueBand">Blue band: <input type="text" id="blueNewRestingLength"> inches</div>
+
     </form>
     <script>
     function calcHide() {
-      $("#maxhrBox").hide();
-      $("#hrReserveBox").hide();
+      $("#HRMax").hide();
+      $("#HRReserve").hide();
+      $("#HRMaxsixtypercent").hide();
+      $("#blueBand").hide();
+
     };
       $("button#calculate").on("click", function() {
-        colorHide();
+        //calcHide();
+        var restingHR = $("input#restingHR").val();
         var Age = $("input#Age").val();
-        var RestingHR = $("input#RestingHR").val();
-        var HRmax = Math.round(207-(Age * 0.7));
-        var HRreserve = Math.round(HRmax - RestingHR);
+        var heartRateMax = Math.round(207 - (Age * 0.7));
+        var heartRateReserve = Math.round(heartRateMax - restingHR);
+        var sixtyPercentHeartRateMax = Math.round(heartRateMax * 0.6);
+        var blueRL = Math.round(10*(Age * 0.0443 / (0.01*(restingHR - 2.323))))/10;
 
-      // Heart Rate output
-        $("input#HRmaxid").val(HRmax);
-        $("input#HR-reserveid").val(HRreserve);
-        $("input#greenNewRestingLength").val(greenRL);
+      // Resting length output
+        $("input#calcHRMax").val(heartRateMax);
+        $("input#calcHRReserve").val(heartRateReserve);
+        $("input#sixtyPercentHRMax").val(sixtyPercentHeartRateMax);
         $("input#blueNewRestingLength").val(blueRL);
 
       // Shows only the bands in the correct ranges
-        function singleBandShow(x,y,z) {
-          if (x <= resistance && resistance <= y) {
+        function calcShow(x,y,z) {
+          if (x <= restingHR && restingHR <= y) {
             $(z).show();
           };
         }
-        singleBandShow(2.9,5.8,"#estHRmax");
-        singleBandShow(3.9,7.0,"#heartratereserve");
-        singleBandShow(5.0,9.6,"#greenBand");
-        singleBandShow(7.1,13.3,"#blueBand");
+        calcShow(2.9,5.8,"#HRMax");
+        calcShow(3.9,7.0,"#HRReserve");
+        calcShow(5.0,9.6,"#HRMaxsixtypercent");
+        calcShow(7.1,13.3,"#blueBand");
 
-        if (resistance < 2.9 || 160.4 < resistance) {
+        if (restingHR < 2.9 || 160.4 < restingHR) {
           alert("Out of range")
         }
       });
       $("button#Reset").on("click", function () {
         $('.Form').trigger("reset");
         $('.TopForm').trigger("reset");
-        colorHide();
+        calcHide();
       });
     </script>
   </body>

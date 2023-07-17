@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html manifest="file.manifest">
+  <head>
+    <meta charset="utf-8" name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!--Style Sheet for the index.html page -->
+    <link href="stylesheet.css" rel="stylesheet" type="text/css" />
+    <!-- jquery -->
+    <script src="jquery-3.2.1.min.js"></script>
+    <!--Icons for mobile app icons-->
+    <link rel="apple-touch-icon" sizes="120x120" href="touch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-pro.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="80x80" href="touch-icon-spotlight.png">
+      <title>Aerobic Exercise Prescription</title>
+  </head>
+  <body>
+    <form method="post" class="TopForm">
+      <input type="number" id="Age" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Age <br>
+      <input type="number" id="restingHR" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Resting Heart Rate (optional)<br>
+    </form>
+    <br>
+    <br>
+    <button id="calculate">Calculate</button>
+    <button id="Reset" class="green">Reset</button>
+    <br>
+    <br>
+    <br>
+    <form class="Form">
+      <p class="big">Heart Rate Calculations</p>
+      <div class="calcHide" id="HRMax">HR max: <input type="number" id="calcHRMax"> bpm</div>
+      <div class="calcHide" id="HRReserve">Heart Rate Reserve: <input type="number" id="calcHRReserve"> bpm</div>
+    </form>
+    <br>
+    <br>
+    <form class="Slider">
+      <input type="range" min="40" max="95" value="60" step="5" onchange="rangevalue.value=value" id="percentSlider"> 
+      <output id="rangevalue">60</output>%
+      <br>
+      <br>
+      <output id="maxDosage">Light</output> intensity
+      <br>
+      <output id="reserveDosage">Moderate</output> intensity
+    </form>
+    <br>
+    <br>
+    <form class="Form">
+      <div class="calcHide" id="HRMaxpercent">% Max: <input type="number" id="percentageHRmax"> bpm</div>
+      <div class="calcHide" id="HRReservePercent">% Heart Rate Reserve: <input type="number" id="percentageHRreserve"> bpm</div>
+    </form>
+    <script>
+    function calcHide() {
+      $("#HRMax").hide();
+      $("#HRReserve").hide();
+      $("#HRMaxpercent").hide();
+      $("#HRReservePercent").hide();
+
+    };
+      $("button#calculate").on("click", function() {
+        //calcHide();
+        var rangeVal = (parseInt($("output#rangevalue").val())/100);
+        let restingHR = parseInt($("input#restingHR").val());
+        let Age = parseInt($("input#Age").val());
+        let heartRateMax = parseInt(Math.round(207 - (Age * 0.7)));
+        let percentMax = parseInt(heartRateMax * rangeVal);
+        let heartRateReserve = parseInt(Math.round(heartRateMax - restingHR));
+
+        // Text Output
+        $("#HRMaxpercent").html(rangeVal*100 + "% Heart Rate Max: " + percentMax);
+
+        // Percentage Output
+        $("input#calcHRMax").val(heartRateMax);
+        $("input#calcHRReserve").val(heartRateReserve);
+        // $("input#percentageHRmax").val(Math.round(heartRateMax * rangeVal));
+        $("input#percentageHRreserve").val(Math.round(((heartRateReserve * rangeVal)+restingHR)));
+        $("input#percentSlider").on("change", function () {
+            let rangeVal = (parseInt($("output#rangevalue").val())/100);
+            $("input#percentageHRmax").val(parseInt(Math.round(heartRateMax * rangeVal)));
+            $("input#percentageHRreserve").val(parseInt(Math.round((heartRateReserve * rangeVal)+ restingHR)));
+            $("test").val(rangeVal*100)
+            });
+
+        // Shows only the bands in the correct ranges
+        function calcShow(x,y,z) {
+          if (x <= restingHR && restingHR <= y) {
+            $(z).show();
+          };
+        }
+        calcShow(2.9,5.8,"#HRMax");
+        calcShow(3.9,7.0,"#HRReserve");
+        calcShow(5.0,9.6,"#HRMaxsixtypercent");
+        calcShow(7.1,13.3,"#HRReservePercent");
+
+        if (restingHR < 2.9 || 160.4 < restingHR) {
+          alert("Out of range")
+        }
+      });
+      $("button#Reset").on("click", function () {
+        $('.Form').trigger("reset");
+        $('.TopForm').trigger("reset");
+        calcHide();
+      });
+    </script>
+  </body>
+</html>

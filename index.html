@@ -19,7 +19,8 @@
   <body>
     <form method="post" class="TopForm">
       <input type="number" id="Age" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Age <br>
-      <input type="number" id="restingHR" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Resting Heart Rate (optional)<br>
+      <input type="number" id="restingHR" min="0" inputmode="numeric" pattern="[0-9]*" title="Non-negative integral number"> Resting Heart Rate (optional)
+      <br>
     </form>
     <br>
     <br>
@@ -27,52 +28,124 @@
     <button id="Reset" class="green">Reset</button>
     <br>
     <br>
-    <br>
     <form class="Form">
       <p class="big">Heart Rate Calculations</p>
-      <div class="bandHide" id="HRMax">HR max: <input type="text" id="calcHRMax"> bpm</div>
-      <div class="bandHide" id="HRReserve">Heart Rate Reserve: <input type="text" id="calcHRReserve"> bpm</div>
-      <div class="bandHide" id="HRMaxsixtypercent">60% Max: <input type="text" id="sixtyPercentHRMax"> bpm</div>
-      <div class="bandHide" id="blueBand">Blue band: <input type="text" id="blueNewRestingLength"> inches</div>
-
+      <div class="calcHide" id="HRMax">HR max: <input type="number" id="calcHRMax"> bpm</div>
+      <div class="calcHide" id="HRReserve">Heart Rate Reserve: <input type="number" id="calcHRReserve"> bpm</div>
+    </form>
+    <br>
+    <br>
+    <form class="Slider">
+      <input type="range" min="40" max="95" value="60" step="5" onchange="rangevalue.value=value" id="percentSlider"> 
+      <output id="rangevalue">60</output>%
+      <br>
+      <br>
+    </form>
+    <div id="maxDosage" class="calcHide">
+      <p class="light">Light Intensity  < 65%</p>
+      <p class="moderate">Moderate Intensity 65-75%</p>
+      <p class="vigerous">Vigerous Intensity 75-95%</p>
+    </div>
+    <br>
+    <div id="reserveDosage" class="calcHide">
+      <p class="light">Light Intensity  < 40%</p>
+      <p class="moderate">Moderate Intensity 40-60%</p>
+      <p class="vigerous">Vigerous Intensity 60-90%</p>
+    </div>
+    <br>
+    <form class="Form calcHide" id="HRMaxPercentageForm">
+      <div class="sliderValue inline">60</div><div class="inline" id="HRMaxpercent">% Max: <input type="number" id="percentageHRmax"> bpm</div>
+      <br>
+    </form>
+    <form class="Form calcHide" id="HRReservePercentageForm">
+      <div class="sliderValue inline">60</div><div class="inline" id="HRReservePercent">% Heart Rate Reserve: <input type="number" id="percentageHRreserve"> bpm</div>
     </form>
     <script>
     function calcHide() {
-      $("#HRMax").hide();
-      $("#HRReserve").hide();
-      $("#HRMaxsixtypercent").hide();
-      $("#blueBand").hide();
-
+      $("#HRMax").removeClass("calcHide");
+      $("#HRReserve").removeClass("calcHide");
+      $("#HRMaxPercentageForm").removeClass("calcHide");
+      $("#HRReservePercentageForm").removeClass("calcHide");
+      $("#maxDosage").removeClass("calcHide");
+      $("#reserveDosage").removeClass("calcHide");
+      $("#HRMax").removeClass("calcShow");
+      $("#HRReserve").removeClass("calcShow");
+      $("#HRMaxPercentageForm").removeClass("calcShow");
+      $("#HRReservePercentageForm").removeClass("calcShow");
+      $("#maxDosage").removeClass("calcShow");
+      $("#reserveDosage").removeClass("calcShow");
+      $("#HRMax").addClass("calcHide");
+      $("#HRReserve").addClass("calcHide");
+      $("#HRMaxPercentageForm").addClass("calcHide");
+      $("#HRReservePercentageForm").addClass("calcHide");
+      $("#maxDosage").addClass("calcHide");
+      $("#reserveDosage").addClass("calcHide");
     };
-      $("button#calculate").on("click", function() {
-        //calcHide();
-        var restingHR = $("input#restingHR").val();
-        var Age = $("input#Age").val();
-        var heartRateMax = Math.round(207 - (Age * 0.7));
-        var heartRateReserve = Math.round(heartRateMax - restingHR);
-        var sixtyPercentHeartRateMax = Math.round(heartRateMax * 0.6);
-        var blueRL = Math.round(10*(Age * 0.0443 / (0.01*(restingHR - 2.323))))/10;
 
-      // Resting length output
+      // On click section (Main code)
+      $("button#calculate").on("click", function() {
+        
+        // reset hide and show
+        calcHide();
+
+        // Define variables
+        var rangeVal = $("output#rangevalue").val()/100;
+        let rangeValFull = $("output#rangevalue").val();
+        let restingHR = parseInt($("input#restingHR").val());
+        let Age = parseInt($("input#Age").val());
+        let heartRateMax = parseInt(Math.round(207 - (Age * 0.7)));
+        let percentMax = parseInt(heartRateMax * rangeVal);
+        let heartRateReserve = parseInt(Math.round(heartRateMax - restingHR));
+        let restingHeartRateInput = $("#restingHR").val();
+        if (restingHR > 0) {
+            $("#HRReserve").removeClass("calcHide");
+            $("#HRReserve").show();
+            $("#HRReserve").addClass("calcShow");
+            $("#HRReservePercentageForm").removeClass("calcHide");
+            $("#HRReservePercentageForm").show();
+            $("#HRReservePercentageForm").addClass("calcShow");
+            $("#reserveDosage").removeClass("calcHide");
+            $("#reserveDosage").show();
+            $("#reserveDosage").addClass("calcShow");
+        } else {
+            $("#HRMax").removeClass("calcHide");
+            $("#HRMax").show();
+            $("#HRMax").addClass("calcShow");
+            $("#HRMaxPercentageForm").removeClass("calcHide");
+            $("#HRMaxPercentageForm").show();
+            $("#HRMaxPercentageForm").addClass("calcShow");
+            $("#maxDosage").removeClass("calcHide");
+            $("#maxDosage").show();
+            $("#maxDosage").addClass("calcShow");
+        };
+
+        // Percentage Output
+        $(".sliderValue").text($("output#rangevalue").val());
         $("input#calcHRMax").val(heartRateMax);
         $("input#calcHRReserve").val(heartRateReserve);
-        $("input#sixtyPercentHRMax").val(sixtyPercentHeartRateMax);
-        $("input#blueNewRestingLength").val(blueRL);
+        $("input#percentageHRmax").val(Math.round(heartRateMax * rangeVal));
+        $("input#percentageHRreserve").val(Math.round(((heartRateReserve * rangeVal)+restingHR)));
 
-      // Shows only the bands in the correct ranges
-        function calcShow(x,y,z) {
-          if (x <= restingHR && restingHR <= y) {
+
+        // On change function for slider
+        $("input#percentSlider").on("change", function () {
+            let rangeVal = $("output#rangevalue").val()/100;
+            let rangeValFull = $("output#rangevalue").val();
+            $(".sliderValue").text($("output#rangevalue").val());
+            $("input#percentageHRmax").val(parseInt(Math.round(heartRateMax * rangeVal)));
+            $("input#percentageHRreserve").val(parseInt(Math.round((heartRateReserve * rangeVal)+ restingHR)));
+            $("test").val(rangeVal*100)
+            
+            });
+
+        // Shows only the bands in the correct ranges
+/*        function calcShow(z) {
             $(z).show();
-          };
-        }
-        calcShow(2.9,5.8,"#HRMax");
-        calcShow(3.9,7.0,"#HRReserve");
-        calcShow(5.0,9.6,"#HRMaxsixtypercent");
-        calcShow(7.1,13.3,"#blueBand");
-
-        if (restingHR < 2.9 || 160.4 < restingHR) {
-          alert("Out of range")
-        }
+        };
+        calcShow("#HRMax");
+        calcShow("#HRReserve");
+        calcShow("#HRMaxsixtypercent");
+        calcShow("#HRReservePercent");*/
       });
       $("button#Reset").on("click", function () {
         $('.Form').trigger("reset");

@@ -79,7 +79,7 @@ input[type=range]::-webkit-slider-thumb {
   width: 40px;
   border-radius: 10px;
   background: #759afc;
-  cursor: pointer;
+  cursor: pointe;
   -webkit-appearance: none;
   margin-top: -15px;
 }
@@ -130,4 +130,38 @@ select:focus {
 
 .calcHide {
   display: none;
+}
+
+.calcShow {
+  display: inline;
+}
+
+.big {
+  font-size: 1.2em;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.slider {
+  font-size: 2.0em;
+}
+
+.sliderValue {
+  font-size: 1.2em;
+}
+
+#HRMaxpercent, #HRReservePercent {
+  font-size: 1em;
+  line-height: 2em;
+}
+
+#percentSlider {
+  onchange: function() 
+
+}
+
+.moderate {
+  font-weight: normal;
 }

@@ -44,13 +44,13 @@
     <div id="maxDosage" class="calcHide">
       <p class="light">Light Intensity  < 65%</p>
       <p class="moderate">Moderate Intensity 65-75%</p>
-      <p class="vigerous">Vigerous Intensity 75-95%</p>
+      <p class="vigorous">vigorous Intensity 75-95%</p>
     </div>
     <br>
     <div id="reserveDosage" class="calcHide">
       <p class="light">Light Intensity  < 40%</p>
       <p class="moderate">Moderate Intensity 40-60%</p>
-      <p class="vigerous">Vigerous Intensity 60-90%</p>
+      <p class="vigorous">vigorous Intensity 60-90%</p>
     </div>
     <br>
     <form class="Form calcHide" id="HRMaxPercentageForm">
@@ -127,6 +127,17 @@
         $("input#percentageHRreserve").val(Math.round(((heartRateReserve * rangeVal)+restingHR)));
 
 
+        // Intesity Bolding
+        function reserveModerate(min,max) {
+          if (rangeValFull > min && rangeValFull < max) {
+            $(".moderate").addClass("bold");
+          } else {
+            $(".moderate").removeClass("bold");
+          }
+        }
+        reserveModerate(39,61);
+
+
         // On change function for slider
         $("input#percentSlider").on("change", function () {
             let rangeVal = $("output#rangevalue").val()/100;
@@ -135,6 +146,16 @@
             $("input#percentageHRmax").val(parseInt(Math.round(heartRateMax * rangeVal)));
             $("input#percentageHRreserve").val(parseInt(Math.round((heartRateReserve * rangeVal)+ restingHR)));
             $("test").val(rangeVal*100)
+
+            // highlights the intensity
+            function reserveModerate(min,max) {
+              if (rangeValFull > min && rangeValFull < max) {
+              $(".moderate").addClass("bold");
+            } else {
+              $(".moderate").removeClass("bold");
+              }
+            }
+            reserveModerate(39,61);
             
             });
 

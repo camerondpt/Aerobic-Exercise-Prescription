@@ -163,5 +163,16 @@ select:focus {
 }
 
 .moderate {
-  font-weight: normal;
+  
 }
+
+.bold {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #32a877;
+}
+
+
+
+
+

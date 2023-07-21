@@ -166,9 +166,13 @@ select:focus {
   
 }
 
+.vigorous {
+  
+}
+
 .bold {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.4em;
   color: #32a877;
 }
 

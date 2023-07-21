@@ -23,22 +23,18 @@
       <br>
     </form>
     <br>
-    <br>
     <button id="calculate">Calculate</button>
     <button id="Reset" class="green">Reset</button>
     <br>
     <br>
     <form class="Form">
-      <p class="big">Heart Rate Calculations</p>
       <div class="calcHide" id="HRMax">HR max: <input type="number" id="calcHRMax"> bpm</div>
       <div class="calcHide" id="HRReserve">Heart Rate Reserve: <input type="number" id="calcHRReserve"> bpm</div>
     </form>
     <br>
-    <br>
     <form class="Slider">
       <input type="range" min="40" max="95" value="60" step="5" onchange="rangevalue.value=value" id="percentSlider"> 
       <output id="rangevalue">60</output>%
-      <br>
       <br>
     </form>
     <div id="maxDosage" class="calcHide">
@@ -58,7 +54,7 @@
       <br>
     </form>
     <form class="Form calcHide" id="HRReservePercentageForm">
-      <div class="sliderValue inline">60</div><div class="inline" id="HRReservePercent">% Heart Rate Reserve: <input type="number" id="percentageHRreserve"> bpm</div>
+      <div class="sliderValue inline">60</div><div class="inline" id="HRReservePercent">% HR Reserve: <input type="number" id="percentageHRreserve"> bpm</div>
     </form>
     <script>
     function calcHide() {

@@ -32,7 +32,7 @@ input[type=text]:focus {
 }
 
 input[type="number"] {
-  width: 90px;
+  width: 55px;
   border: none;
   border-bottom: 1px solid black;
   padding: 3px 10px;
@@ -43,6 +43,18 @@ input[type="number"] {
   -webkit-appearance: none;
   background-clip: padding-box;
 
+}
+
+/* Chrome, Safari, Edge, Opera getting rid of arrow buttons */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox getting rid of arrow buttons */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 input[type=number]:focus {
